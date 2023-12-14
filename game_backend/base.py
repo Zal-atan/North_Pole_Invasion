@@ -32,7 +32,7 @@ class Game:
         # Sounds
         self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
         self.explosion_sound.set_volume(0.7)
-        self.snowball_sound = pygame.mixer.Sound('../audio/woosh.mp3')
+        self.snowball_sound = pygame.mixer.Sound('../audio/whoosh.mp3')
         self.snowball_sound.set_volume(0.5)
         self.hit_sound = pygame.mixer.Sound('../audio/snowball_hit.wav')
         self.hit_sound.set_volume(0.6)
@@ -105,10 +105,12 @@ class Game:
         score = self.font.render('Score : ' + str(self.score_value), True, (0, 0, 0))
         self.screen.blit(score, (self.font_x, self.font_y))
 
-    def lives(self):
+    def display_lives(self):
         for life in range(self.lives):
             x = self.lives_x + (life * 25)
-            self.screen.blit(self.lives_icon, x, self.lives_y)
+            lives_str = self.lives_font.render('Lives : ', False, (0, 0, 0))
+            self.screen.blit(lives_str, (x - 150, self.lives_y))
+            self.screen.blit(self.lives_icon, (x, self.lives_y))
 
     def win_game(self):
         win_font = win_font.render('SANTA WINS!', True, (0, 0, 0))
@@ -128,3 +130,4 @@ class Game:
         self.enemies.draw(self.screen)
         self.enemy_snowballs.draw(self.screen)
         self.score()
+        self.display_lives()
