@@ -2,9 +2,11 @@
 from player import Player
 from background import Background
 from enemies import Enemy
+from projectiles import Snowball
 import pygame
 from variables import *
 from pygame import mixer
+from random import choice
 
 class Game:
     def __init__(self, screen):
@@ -54,7 +56,16 @@ class Game:
                     enemy_img = Enemy("penguin", x, y)
                 self.enemies.add(enemy_img)
 
-        # Game Over
+    # Throw Snowball
+    def throw_snowball(self):
+        if self.enemies.sprites():
+            random_enemy = choice(self.enemies.sprites())
+            snowball_img = Snowball(random_enemy.rect.center)
+            self.enemy_snowballs.add(snowball_img)
+            # add snowball sound
+
+
+    # Game Over
 
 
     def collision(self):
@@ -67,10 +78,13 @@ class Game:
     def run_game(self):
         #Updates
         self.player.update()
+        self.enemies.update(1)
+        self.enemy_snowballs.update()
 
         # ReDraws
         self.bg.draw(self.screen)
         self.player.draw(self.screen)
         self.player.sprite.presents.draw(self.screen)
         self.enemies.draw(self.screen)
+        self.enemy_snowballs.draw(self.screen)
         self.score()

@@ -22,6 +22,9 @@ if __name__ == "__main__":
     music = pygame.mixer.Sound('../audio/background_music.wav')
     music.set_volume(0.2)
     music.play(-1)
+
+    SNOWBALL = pygame.USEREVENT + 1
+    pygame.time.set_timer(SNOWBALL, ENEMY_THROW_COOLDOWN)
     
     # Keep game running while playing
     game_is_on = True
@@ -29,6 +32,8 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_is_on = False
+            if event.type == SNOWBALL:
+                game.throw_snowball()
         
         screen.fill((30,30,30)) # Clears the screen each cycle with blank screen
         game.run_game()
