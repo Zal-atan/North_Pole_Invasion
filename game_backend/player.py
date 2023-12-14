@@ -1,6 +1,7 @@
 import pygame
 from variables import *
 from projectiles import Present
+from pygame import mixer
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -41,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.presents.add(Present(self.rect.center))
         self.ready_to_throw = False
         self.present_cooldown = pygame.time.get_ticks()
-        # Play sound?
+        present_sound = pygame.mixer.Sound('../audio/present.wav')
 
     def get_present_cooldown(self):
         if not self.ready_to_throw:
