@@ -14,6 +14,8 @@ class Player(pygame.sprite.Sprite):
         self.ready_to_throw = True
         self.present_cooldown_ticks = PLAYER_THROW_COOLDOWN
         self.present_cooldown = 0
+        self.present_sound = pygame.mixer.Sound('../audio/present.wav')
+        self.present_sound.set_volume(0.5)
 
         self.presents = pygame.sprite.Group()
 
@@ -42,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         self.presents.add(Present(self.rect.center))
         self.ready_to_throw = False
         self.present_cooldown = pygame.time.get_ticks()
-        present_sound = pygame.mixer.Sound('../audio/present.wav')
+        self.present_sound.play()
 
     def get_present_cooldown(self):
         if not self.ready_to_throw:
