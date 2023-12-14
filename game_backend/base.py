@@ -31,17 +31,22 @@ class Game:
         # Sounds
         self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
         self.explosion_sound.set_volume(0.7)
-        self.snowball_sound = pygame.mixer.Sound('../audio/snowball.wav')
+        self.snowball_sound = pygame.mixer.Sound('../audio/woosh.mp3')
         self.snowball_sound.set_volume(0.5)
+        self.hit_sound = pygame.mixer.Sound('../audio/snowball_hit.wav')
+        self.hit_sound.set_volume(0.6)
 
         # Score
         self.score_value = 0
-        self.font = pygame.font.Font('../fonts/space_invaders.ttf', 30)
+        self.font = pygame.font.Font('../fonts/space_invaders.ttf', SCORE_FONT)
         self.font_x = SCREEN_WIDTH / 2 - 70
         self.font_y = 15
 
         # Game Over
         self.gameover_font = pygame.font.Font('../fonts/space_invaders.ttf', GAME_OVER_FONT)
+
+        # Win Game
+        self.win_font = pygame.font.Font('../fonts/space_invaders.ttf', WIN_FONT)
 
 
     # Enemy Create
@@ -75,11 +80,16 @@ class Game:
         self.screen.blit(gameover_font, (200, 200))
 
     def collision(self):
+        self.hit_sound.play()
         self.explosion_sound.play()
 
     def score(self):
         score = self.font.render('Score : ' + str(self.score_value), True, (0, 0, 0))
         self.screen.blit(score, (self.font_x, self.font_y))
+
+    def win_game(self):
+        win_font = win_font.render('YOU WIN!', True, (0, 0, 0))
+        self.screen.blit(win_font, (200, 200))
 
     def run_game(self):
         #Updates
