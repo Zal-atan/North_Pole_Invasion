@@ -29,8 +29,9 @@ class Enemy(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft = (x, y))
             self.value = 300
 
-    def update(self, direction):
+    def update(self, direction, move_down=0):
         self.rect.x += direction
+        self.rect.y += ENEMY_MOVEDOWN * move_down
 
 class PapaElf(pygame.sprite.Sprite):
     def __init__(self, start):

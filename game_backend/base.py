@@ -26,7 +26,8 @@ class Game:
         self.enemies = pygame.sprite.Group()
         self.enemy_snowballs = pygame.sprite.Group()
         self.enemy_create()
-        self.enemy_direction = 1
+        self.enemy_direction = -1
+        self.enemy_move_down = 0
 
         # Sounds
         self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
@@ -70,6 +71,15 @@ class Game:
             self.enemy_snowballs.add(snowball_img)
             self.snowball_sound.play()
 
+    # Check Enemies hitting wall
+    def check_hit_wall(self):
+        all_enemies = self.enemies.sprites()
+        for enemy in all_enemies:
+            if (enemy.rect.right >= SCREEN_WIDTH) or (enemy.rect.left <= 0):
+                self.enemy_direction *= -1
+                self.enemies.update(self.enemy_direction * 2, 1)
+
+
     def game_over(self):
         gameover_font = gameover_font.render('GAME OVER', True, (0, 0, 0))
         self.screen.blit(gameover_font, (200, 200))
@@ -84,7 +94,8 @@ class Game:
     def run_game(self):
         #Updates
         self.player.update()
-        self.enemies.update(1)
+        self.enemies.update(self.enemy_direction)
+        self.check_hit_wall()
         self.enemy_snowballs.update()
 
         # ReDraws
