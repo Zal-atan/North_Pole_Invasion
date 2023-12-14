@@ -19,7 +19,10 @@ class Game:
         self.player = pygame.sprite.GroupSingle(player_img)
 
     def run_game(self):
+        #Updates
         self.player.update()
+
+        # ReDraws
         self.bg.draw(self.screen)
         self.player.draw(self.screen)
         self.player.sprite.presents.draw(self.screen)
