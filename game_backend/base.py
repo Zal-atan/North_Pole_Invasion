@@ -31,12 +31,18 @@ class Game:
         # Sounds
         self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
         self.explosion_sound.set_volume(0.7)
+        self.snowball_sound = pygame.mixer.Sound('../audio/snowball.wav')
+        self.snowball_sound.set_volume(0.5)
 
         # Score
         self.score_value = 0
         self.font = pygame.font.Font('../fonts/space_invaders.ttf', 30)
         self.font_x = SCREEN_WIDTH / 2 - 70
         self.font_y = 15
+
+        # Game Over
+        self.gameover_font = pygame.font.Font('../fonts/space_invaders.ttf', GAME_OVER_FONT)
+
 
     # Enemy Create
     def enemy_create(self):
@@ -62,11 +68,11 @@ class Game:
             random_enemy = choice(self.enemies.sprites())
             snowball_img = Snowball(random_enemy.rect.center)
             self.enemy_snowballs.add(snowball_img)
-            # add snowball sound
+            self.snowball_sound.play()
 
-
-    # Game Over
-
+    def game_over(self):
+        gameover_font = gameover_font.render('GAME OVER', True, (0, 0, 0))
+        self.screen.blit(gameover_font, (200, 200))
 
     def collision(self):
         self.explosion_sound.play()
