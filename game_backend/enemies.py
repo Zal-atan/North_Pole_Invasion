@@ -17,9 +17,15 @@ class Enemy(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft = (x, y))
             self.value = 200
 
+        if enemy == "rudolph":
+            self.image = pygame.image.load('../photos/rudolph.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, ENEMY_SIZE)
+            self.rect = self.image.get_rect(topleft = (x, y))
+            self.value = 300
+
         if enemy == "elf":
             self.image = pygame.image.load('../photos/elf.png').convert_alpha()
-            self.image = pygame.transform.scale(self.image, ENEMY_SIZE)
+            self.image = pygame.transform.scale(self.image, ELF_SIZE)
             self.rect = self.image.get_rect(topleft = (x, y))
             self.value = 300
 
