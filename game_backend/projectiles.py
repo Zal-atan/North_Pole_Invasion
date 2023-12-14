@@ -10,27 +10,27 @@ class Present(pygame.sprite.Sprite):
         self.speed = PRESENT_SPEED
 
     def destroy(self):
-        """ Destroys present if it goes above screen """
-        if self.rect.y >= SCREEN_HEIGHT + 50:
+        """ Destroys present if it goes above  or below screen """
+        if self.rect.y <= -50 or  self.rect.y >= SCREEN_HEIGHT + 50:
             self.kill()
 
     def update(self):
-        self.rect.y += self.speed
+        self.rect.y -= self.speed
         self.destroy()
 
 class Snowball(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
-        self.image = pygame.image.load('../photos/present.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, PRESENT_SIZE)
+        self.image = pygame.image.load('../photos/Snowball.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, SNOWBALL_SIZE)
         self.rect = self.image.get_rect(center = position)
-        self.speed = PRESENT_SPEED
+        self.speed = SNOWBALL_SPEED
 
     def destroy(self):
         """ Destroys present if it goes above screen """
-        if self.rect.y >= SCREEN_HEIGHT + 50:
+        if self.rect.y <= -50 or  self.rect.y >= SCREEN_HEIGHT + 50:
             self.kill()
 
     def update(self):
-        self.rect.y -= self.speed
+        self.rect.y += self.speed
         self.destroy()
