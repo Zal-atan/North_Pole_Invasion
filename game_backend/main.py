@@ -2,11 +2,14 @@
 import pygame
 from variables import *
 from base import Game
+from pygame import mixer
+
 
 
 if __name__ == "__main__":
     # Initialize pygame
     pygame.init()
+    pygame.mixer.init()
 
     # Initialize screen
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -15,6 +18,11 @@ if __name__ == "__main__":
     game = Game(screen)
     clock = pygame.time.Clock()
 
+    #audio
+    music = pygame.mixer.Sound('../audio/background_music.wav')
+    music.set_volume(0.2)
+    music.play(-1)
+    
     # Keep game running while playing
     game_is_on = True
     while game_is_on:
@@ -27,3 +35,4 @@ if __name__ == "__main__":
 
         pygame.display.flip()
         clock.tick(60)
+
