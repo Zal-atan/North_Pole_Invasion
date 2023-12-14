@@ -22,7 +22,7 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 game_is_on = False
         
-        screen.fill((30,30,30))
+        screen.fill((30,30,30)) # Clears the screen each cycle with blank screen
         game.run_game()
 
         pygame.display.flip()
