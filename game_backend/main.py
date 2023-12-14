@@ -1,6 +1,5 @@
 """ This files runs the game"""
 import pygame
-import sys
 from variables import *
 from base import Game
 
