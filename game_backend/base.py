@@ -172,6 +172,8 @@ class Game:
         if not self.game_is_over:
             self.player.update()
             self.enemies.update(self.enemy_direction)
+            self.tinseltoe.update()
+            self.summon_tinseltoe()
             self.check_hit_wall()
             self.enemy_snowballs.update()
             self.check_impacts()
@@ -179,13 +181,14 @@ class Game:
             if len(self.enemies) == 0:
                 self.game_is_over = 2
         # ReDraws
-        self.bg.draw(self.screen)
-        self.player.draw(self.screen)
-        self.player.sprite.presents.draw(self.screen)
-        self.enemies.draw(self.screen)
-        self.enemy_snowballs.draw(self.screen)
-        self.score()
-        self.display_lives()
+            self.bg.draw(self.screen)
+            self.player.draw(self.screen)
+            self.player.sprite.presents.draw(self.screen)
+            self.enemies.draw(self.screen)
+            self.enemy_snowballs.draw(self.screen)
+            self.tinseltoe.draw(self.screen)
+            self.score()
+            self.display_lives()
         if self.game_is_over:
             self.bg.draw(self.screen)
             self.score()
