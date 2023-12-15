@@ -142,12 +142,17 @@ class Game:
         self.screen.blit(score, (self.font_x, self.font_y))
 
     def display_lives(self):
-        for life in range(self.lives):
-            x = self.lives_x + (life * 25)
-            lives_str = self.lives_font.render('Lives : ', False, (0, 0, 0))
-            self.screen.blit(lives_str, (x - 150, self.lives_y))
-            self.screen.blit(self.lives_icon, (x, self.lives_y))
+        x_offset = 10
+        lives_text = self.lives_font.render('Lives: ', False, (0, 0, 0))
+        self.screen.blit(lives_text, (x_offset, self.lives_y))
+        # Adds space after lives text
+        x_offset += lives_text.get_width() + 10
 
+        # Adds space between icons
+        for _ in range(self.lives):
+            self.screen.blit(self.lives_icon, (x_offset, self.lives_y))
+            x_offset += self.lives_icon.get_width() + 5
+            
     def win_game(self):
         win_font = self.win_font.render('SANTA WINS!', True, (0, 0, 0))
         self.screen.blit(win_font, (200, 200))
