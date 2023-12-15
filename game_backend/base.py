@@ -152,7 +152,7 @@ class Game:
         for _ in range(self.lives):
             self.screen.blit(self.lives_icon, (x_offset, self.lives_y))
             x_offset += self.lives_icon.get_width() + 5
-            
+
     def win_game(self):
         win_font = self.win_font.render('SANTA WINS!', True, (0, 0, 0))
         self.screen.blit(win_font, (200, 200))
@@ -166,6 +166,8 @@ class Game:
             self.enemy_snowballs.update()
             self.check_impacts()
 
+            if len(self.enemies) == 0:
+                self.game_is_over = 2
         # ReDraws
         self.bg.draw(self.screen)
         self.player.draw(self.screen)
@@ -178,3 +180,7 @@ class Game:
             self.bg.draw(self.screen)
             self.score()
             self.game_over()
+        if self.game_is_over == 2:
+            self.bg.draw(self.screen)
+            self.score()
+            self.win_game()
