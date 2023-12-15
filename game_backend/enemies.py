@@ -33,9 +33,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += direction
         self.rect.y += ENEMY_MOVEDOWN * move_down
 
-class PapaElf(pygame.sprite.Sprite):
+class Tinseltoe(pygame.sprite.Sprite):
     def __init__(self, start):
         super().__init__()
         self.image = pygame.image.load('../photos/elf.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, ENEMY_SIZE)
-
