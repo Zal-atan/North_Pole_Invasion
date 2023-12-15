@@ -41,11 +41,11 @@ class Tinseltoe(pygame.sprite.Sprite):
 
         if start_side == 'right':
             x = SCREEN_WIDTH + 50
-            self.speed = -3
+            self.speed = -2
 
         else:
             x = -50
-            self.speed = 3
+            self.speed = 2
 
         self.rect = self.image.get_rect(topleft = (x, 80))
 

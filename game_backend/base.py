@@ -32,6 +32,7 @@ class Game:
 
         self.tinseltoe = pygame.sprite.GroupSingle()
         self.tinseltoe_timer = randint(50, 80)
+        self.tinseltoe_flag = 1
 
         # Sounds
         if self.sound:
@@ -125,6 +126,12 @@ class Game:
                         self.explosion_sound.play()
                         # explosion sound?
 
+                if pygame.sprite.spritecollide(present, self.tinseltoe, True):
+                    self.score_value += 500
+                    present.kill()
+                    self.tinseltoe_flag = 0
+
+
         # snowballs
         if self.enemy_snowballs:
             for snowball in self.enemy_snowballs:
@@ -173,10 +180,12 @@ class Game:
             self.player.update()
             self.enemies.update(self.enemy_direction)
             self.tinseltoe.update()
-            self.summon_tinseltoe()
             self.check_hit_wall()
             self.enemy_snowballs.update()
             self.check_impacts()
+
+            if self.tinseltoe_flag:
+                self.summon_tinseltoe()
 
             if len(self.enemies) == 0:
                 self.game_is_over = 2
