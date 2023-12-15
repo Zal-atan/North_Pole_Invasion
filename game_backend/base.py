@@ -170,4 +170,6 @@ class Game:
         self.score()
         self.display_lives()
         if self.game_is_over:
+            self.bg.draw(self.screen)
+            self.score
             self.game_over()
