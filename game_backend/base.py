@@ -10,7 +10,7 @@ from random import choice
 
 class Game:
     def __init__(self, screen):
-        
+
         #Screen
         self.screen = screen
 
@@ -30,12 +30,12 @@ class Game:
         self.enemy_move_down = 0
 
         # Sounds
-        self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
-        self.explosion_sound.set_volume(0.7)
-        self.snowball_sound = pygame.mixer.Sound('../audio/whoosh.mp3')
-        self.snowball_sound.set_volume(0.5)
-        self.hit_sound = pygame.mixer.Sound('../audio/snowball_hit.wav')
-        self.hit_sound.set_volume(0.6)
+        # self.explosion_sound = pygame.mixer.Sound('../audio/explosion.wav')
+        # self.explosion_sound.set_volume(0.7)
+        # self.snowball_sound = pygame.mixer.Sound('../audio/whoosh.mp3')
+        # self.snowball_sound.set_volume(0.5)
+        # self.hit_sound = pygame.mixer.Sound('../audio/snowball_hit.wav')
+        # self.hit_sound.set_volume(0.6)
 
         # Score
         self.score_value = 0
@@ -64,8 +64,8 @@ class Game:
             for column in range(1, ENEMY_COLUMNS + 1):
                 x = column * ENEMY_X_SPACING + ENEMY_X_START_SPACING
                 y = row * ENEMY_Y_SPACING + ENEMY_Y_START_SPACING
-            
-                if row <= 2: 
+
+                if row <= 2:
                     enemy_img = Enemy("elf", x, y)
                 elif row == 3:
                     if column == 4:
@@ -82,7 +82,7 @@ class Game:
             random_enemy = choice(self.enemies.sprites())
             snowball_img = Snowball(random_enemy.rect.center)
             self.enemy_snowballs.add(snowball_img)
-            self.snowball_sound.play()
+            # self.snowball_sound.play()
 
     # Check Enemies hitting wall
     def check_hit_wall(self):
@@ -91,6 +91,36 @@ class Game:
             if (enemy.rect.right >= SCREEN_WIDTH) or (enemy.rect.left <= 0):
                 self.enemy_direction *= -1
                 self.enemies.update(self.enemy_direction * 2, 1)
+
+    # Check for impacts
+    def check_impacts(self):
+
+        # presents
+        if self.player.sprite.presents:
+            for present in self.player.sprite.presents:
+
+                enemy_hit = pygame.sprite.spritecollide(present,
+                                                        self.enemies,
+                                                        True,
+                                                        pygame.sprite.collide_rect_ratio(0.5))
+                if enemy_hit:
+                    for enemy in enemy_hit:
+                        self.score_value += enemy.value
+                    present.kill()
+                    # explosion sound?
+
+        # snowballs
+        if self.enemy_snowballs:
+            for snowball in self.enemy_snowballs:
+                if pygame.sprite.spritecollide(snowball,
+                                                self.player,
+                                                False,
+                                                pygame.sprite.collide_rect_ratio(0.5)):
+                    snowball.kill()
+                    self.lives -= 1
+                    if self.lives <= 0:
+                        print("YOU LOSE SUCKER")
+                        pygame.quit()
 
 
     def game_over(self):
@@ -122,6 +152,7 @@ class Game:
         self.enemies.update(self.enemy_direction)
         self.check_hit_wall()
         self.enemy_snowballs.update()
+        self.check_impacts()
 
         # ReDraws
         self.bg.draw(self.screen)
