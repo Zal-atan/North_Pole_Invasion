@@ -4,7 +4,7 @@ from projectiles import Present
 from pygame import mixer
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, sound):
         super().__init__()
         self.image = pygame.image.load('../photos/santa.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, PLAYER_SIZE)
@@ -14,8 +14,10 @@ class Player(pygame.sprite.Sprite):
         self.ready_to_throw = True
         self.present_cooldown_ticks = PLAYER_THROW_COOLDOWN
         self.present_cooldown = 0
-        # self.present_sound = pygame.mixer.Sound('../audio/present.wav')
-        # self.present_sound.set_volume(0.5)
+        self.sound = sound
+        if self.sound:
+            self.present_sound = pygame.mixer.Sound('../audio/present.wav')
+            self.present_sound.set_volume(0.5)
 
         self.presents = pygame.sprite.Group()
 
@@ -44,7 +46,8 @@ class Player(pygame.sprite.Sprite):
         self.presents.add(Present(self.rect.center))
         self.ready_to_throw = False
         self.present_cooldown = pygame.time.get_ticks()
-        # self.present_sound.play()
+        if self.sound:
+            self.present_sound.play()
 
     def get_present_cooldown(self):
         if not self.ready_to_throw:

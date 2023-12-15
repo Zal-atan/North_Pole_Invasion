@@ -8,14 +8,20 @@ from pygame import mixer
 if __name__ == "__main__":
     # Initialize pygame
     pygame.init()
-    # pygame.mixer.init()
+
+    sound = 0
+    try:
+        pygame.mixer.init()
+        sound = 1
+    except Exception as e:
+        print("Sound not working")
 
 
     # Initialize screen
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
     # Initialize Game
-    game = Game(screen)
+    game = Game(screen, sound)
     clock = pygame.time.Clock()
 
     #audio
@@ -37,6 +43,7 @@ if __name__ == "__main__":
                 game.throw_snowball()
 
         screen.fill((30,30,30)) # Clears the screen each cycle with blank screen
+
         game.run_game()
 
         pygame.display.flip()
