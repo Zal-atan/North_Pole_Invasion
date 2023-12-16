@@ -3,6 +3,7 @@ from player import Player
 from background import Background
 from enemies import Enemy, Tinseltoe
 from projectiles import Snowball
+from obstacles import Igloo
 import pygame
 from variables import *
 from pygame import mixer
@@ -33,6 +34,9 @@ class Game:
         self.tinseltoe = pygame.sprite.GroupSingle()
         self.tinseltoe_timer = randint(50, 80)
         self.tinseltoe_flag = 1
+
+        # Obstacles
+        self.obstacles = pygame.sprite.Group()
 
         # Sounds
         if self.sound:
@@ -97,6 +101,14 @@ class Game:
             self.tinseltoe.add(Tinseltoe(choice(["left", "right"])))
             self.tinseltoe_timer = randint(500, 800)
 
+    # Obstacle Create
+    def obstacle_create(self):
+        for column in range(1, OBSTACLE_NUMBER + 1):
+            x = column * OBSTACLE_X_SPACING + OBSTACLE_X_START_SPACING
+
+            self.obstacles.add(Igloo(x, OBSTACLE_Y_POSITION))
+
+
     # Throw Snowball
     def throw_snowball(self):
         if self.enemies.sprites():
@@ -138,6 +150,20 @@ class Game:
                     present.kill()
                     self.tinseltoe_flag = 0
 
+                obstacle_hit = pygame.sprite.spritecollide(present,
+                                                        self.obstacles,
+                                                        False,
+                                                        pygame.sprite.collide_rect_ratio(0.4))
+                if obstacle_hit:
+                    for obstacle in obstacle_hit:
+                        obstacle.img += 1
+                        obstacle.hitpoints -= 1
+                        if obstacle.hitpoints == 0:
+                            present.kill()
+                    present.kill()
+                    if self.sound:
+                        self.explosion_sound.play()
+
 
         # snowballs
         if self.enemy_snowballs:
@@ -156,6 +182,29 @@ class Game:
                         self.game_is_over = 1
                         # pygame.quit()
 
+                obstacle_hit = pygame.sprite.spritecollide(snowball,
+                                                        self.obstacles,
+                                                        False,
+                                                        pygame.sprite.collide_rect_ratio(0.8))
+                if obstacle_hit:
+                    for obstacle in obstacle_hit:
+                        obstacle.img += 1
+                        obstacle.hitpoints -= 1
+                        if obstacle.hitpoints == 0:
+                            obstacle.kill()
+                    snowball.kill()
+                    if self.sound:
+                        self.hit_sound.play()
+
+
+        # enemies
+        if self.enemies:
+            for enemy in self.enemies:
+
+                if pygame.sprite.spritecollide(enemy, self.player, False, pygame.sprite.collide_rect_ratio(0.6)):
+                    self.game_is_over = 1
+
+                pygame.sprite.spritecollide(enemy, self.obstacles, True, pygame.sprite.collide_rect_ratio(0.6))
 
     def game_over(self):
         gameover_font = self.gameover_font.render('SANTA  PAYS  UP!', False, (0, 0, 0))
@@ -204,6 +253,7 @@ class Game:
         if timeNow >= self.level_start_countdown + 5950:
             self.level_start = 0
             self.enemy_create()
+            self.obstacle_create()
             self.tinseltoe_flag = 1
 
     def run_game(self):
@@ -221,6 +271,7 @@ class Game:
                 self.check_hit_wall()
                 self.enemy_snowballs.update()
                 self.check_impacts()
+                self.obstacles.update()
 
                 if self.tinseltoe_flag:
                     self.summon_tinseltoe()
@@ -234,6 +285,7 @@ class Game:
                 self.enemies.draw(self.screen)
                 self.enemy_snowballs.draw(self.screen)
                 self.tinseltoe.draw(self.screen)
+                self.obstacles.draw(self.screen)
                 self.score()
                 self.display_lives()
             if self.game_is_over:
