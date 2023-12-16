@@ -25,9 +25,10 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
 
     #audio
-    # music = pygame.mixer.Sound('../audio/background_music.wav')
-    # music.set_volume(0.2)
-    # music.play(-1)
+    if sound:
+        music = pygame.mixer.Sound('../audio/background_music.wav')
+        music.set_volume(0.2)
+        music.play(-1)
 
 
     SNOWBALL = pygame.USEREVENT + 1

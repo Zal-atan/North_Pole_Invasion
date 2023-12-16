@@ -26,7 +26,7 @@ class Game:
         # Enemy Creation
         self.enemies = pygame.sprite.Group()
         self.enemy_snowballs = pygame.sprite.Group()
-        self.enemy_create()
+        # self.enemy_create()
         self.enemy_direction = -1
         self.enemy_move_down = 0
 
@@ -45,6 +45,8 @@ class Game:
 
         # Score
         self.score_value = 0
+        with open("high_score.txt") as file:
+            self.high_score = int(file.read())
         self.font = pygame.font.Font('../fonts/space_invaders.ttf', SCORE_FONT)
         self.font_x = SCREEN_WIDTH / 2 - 70
         self.font_y = 15
@@ -64,6 +66,11 @@ class Game:
         # Win Game
         self.win_font = pygame.font.Font('../fonts/space_invaders.ttf', WIN_FONT)
 
+        # Level Font
+        self.level_font = pygame.font.Font('../fonts/space_invaders.ttf', LEVEL_FONT)
+        self.level_multiplier = 1
+        self.level_start = 1
+        self.level_start_countdown = 0
 
     # Enemy Create
     def enemy_create(self):
@@ -120,14 +127,14 @@ class Game:
                                                         pygame.sprite.collide_rect_ratio(0.5))
                 if enemy_hit:
                     for enemy in enemy_hit:
-                        self.score_value += enemy.value
+                        self.score_value += round(enemy.value * (1.25 ** (self.level_multiplier - 1)))
                     present.kill()
                     if self.sound:
                         self.explosion_sound.play()
                         # explosion sound?
 
                 if pygame.sprite.spritecollide(present, self.tinseltoe, True):
-                    self.score_value += 500
+                    self.score_value += round(500 * (1.25 ** (self.level_multiplier - 1)))
                     present.kill()
                     self.tinseltoe_flag = 0
 
@@ -151,12 +158,23 @@ class Game:
 
 
     def game_over(self):
-        gameover_font = self.gameover_font.render('SANTA PAYS UP!', False, (0, 0, 0))
-        self.screen.blit(gameover_font, (100, 200))
+        gameover_font = self.gameover_font.render('SANTA  PAYS  UP!', False, (0, 0, 0))
+        x = SCREEN_WIDTH / 2 - gameover_font.get_width() / 2
+        self.screen.blit(gameover_font, (x, 200))
 
     def score(self):
         score = self.font.render('Score : ' + str(self.score_value), True, (0, 0, 0))
-        self.screen.blit(score, (self.font_x, self.font_y))
+        x = SCREEN_WIDTH / 2 - score.get_width() / 2
+        self.screen.blit(score, (x, self.font_y))
+
+        if self.score_value > self.high_score:
+            self.high_score = self.score_value
+            with open("high_score.txt", mode="w") as file:
+                file.write(str(self.high_score))
+
+        high_score = self.lives_font.render('High Score: ' + str(self.high_score), True, (0, 0, 0))
+        x = SCREEN_WIDTH - high_score.get_width()
+        self.screen.blit(high_score, (x, 20))
 
     def display_lives(self):
         x_offset = 10
@@ -174,35 +192,60 @@ class Game:
         win_font = self.win_font.render('SANTA WINS!', True, (0, 0, 0))
         self.screen.blit(win_font, (200, 200))
 
+    def level(self):
+        level_text = self.level_font.render('LEVEL: ' + str(self.level_multiplier), True, (0, 0, 0))
+        x = SCREEN_WIDTH / 2 - level_text.get_width() / 2
+        self.screen.blit(level_text, (x, 200))
+        timeNow = pygame.time.get_ticks()
+        timeRemaining = int((self.level_start_countdown + 5950 - timeNow) / 1000)
+        level_time = self.level_font.render(str(timeRemaining), True, (0, 0, 0))
+        x =  SCREEN_WIDTH / 2 - level_time.get_width() / 2
+        self.screen.blit(level_time, (x, 300))
+        if timeNow >= self.level_start_countdown + 5950:
+            self.level_start = 0
+            self.enemy_create()
+            self.tinseltoe_flag = 1
+
     def run_game(self):
-        #Updates
-        if not self.game_is_over:
-            self.player.update()
-            self.enemies.update(self.enemy_direction)
-            self.tinseltoe.update()
-            self.check_hit_wall()
-            self.enemy_snowballs.update()
-            self.check_impacts()
+        if self.level_start:
+            self.bg.draw(self.screen)
+            self.score()
+            self.level()
 
-            if self.tinseltoe_flag:
-                self.summon_tinseltoe()
+        else:
+            #Updates
+            if not self.game_is_over:
+                self.player.update()
+                self.enemies.update(self.enemy_direction)
+                self.tinseltoe.update()
+                self.check_hit_wall()
+                self.enemy_snowballs.update()
+                self.check_impacts()
 
-            if len(self.enemies) == 0:
-                self.game_is_over = 2
-        # ReDraws
-            self.bg.draw(self.screen)
-            self.player.draw(self.screen)
-            self.player.sprite.presents.draw(self.screen)
-            self.enemies.draw(self.screen)
-            self.enemy_snowballs.draw(self.screen)
-            self.tinseltoe.draw(self.screen)
-            self.score()
-            self.display_lives()
-        if self.game_is_over:
-            self.bg.draw(self.screen)
-            self.score()
-            self.game_over()
-        if self.game_is_over == 2:
-            self.bg.draw(self.screen)
-            self.score()
-            self.win_game()
+                if self.tinseltoe_flag:
+                    self.summon_tinseltoe()
+
+                if len(self.enemies) == 0:
+                    self.game_is_over = 2
+            # ReDraws
+                self.bg.draw(self.screen)
+                self.player.draw(self.screen)
+                self.player.sprite.presents.draw(self.screen)
+                self.enemies.draw(self.screen)
+                self.enemy_snowballs.draw(self.screen)
+                self.tinseltoe.draw(self.screen)
+                self.score()
+                self.display_lives()
+            if self.game_is_over:
+                self.bg.draw(self.screen)
+                self.score()
+                self.game_over()
+            if self.game_is_over == 2:
+                self.bg.draw(self.screen)
+                self.score()
+                # self.win_game()
+                self.level_start = 1
+                self.level_start_countdown = pygame.time.get_ticks()
+                self.level_multiplier += 1
+                self.enemy_direction = -1 * (1.25 ** self.level_multiplier)
+                self.game_is_over = 0
