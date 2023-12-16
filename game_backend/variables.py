@@ -1,9 +1,9 @@
-""" This file contains the easily changeable variables for the different 
+""" This file contains the easily changeable variables for the different
 characters and speeds"""
 
 # Screen
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 800
 
 # PLAYER
 PLAYER_POSITION = (SCREEN_WIDTH / 2, SCREEN_HEIGHT)
@@ -34,6 +34,7 @@ SCORE_FONT = 30
 GAME_OVER_FONT = 70
 WIN_FONT = 70
 LIVES_FONT = 20
+LEVEL_FONT = 70
 
 # Lives
 LIVES_SIZE = (25, 25)
